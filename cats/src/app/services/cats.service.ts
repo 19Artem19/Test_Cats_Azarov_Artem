@@ -1,34 +1,21 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { CatImages } from '../interfaces';
+import { Breeds } from '../interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CatsService {
 
-  catsSub$ = new BehaviorSubject<CatImages[]>([]);
-  catsSub = this.catsSub$.asObservable();
+  constructor(private http: HttpClient) { }
 
-  private url = 'https://api.thecatapi.com/v1/images/search?limit=20';
-  private apiKey = 'live_nuRXiePd6EWzdd8NcqtPemH35sgyCWhFcA0bywPUNvwRZU0FKMbbgbN4oeA3M2MB';
-  //  private _url = environment.url;
-  //  private _apiKey = environment.apiKey;
-
-
-  constructor(private http: HttpClient) {
-    this.getData().subscribe((cats) => {
-      this.catsSub$.next(cats);
-    });
+  getBreeds() {
+    return this.http.get<Breeds[]>('https://api.thecatapi.com/v1/breeds');
   }
 
-  getData(): Observable<CatImages[]> {
-    return this.http.get<CatImages[]>(`${this.url}&api_key=${this.apiKey}`)
+  getCatsImagesByBreed(breedId: string, amount: number) {
+    return this.http.get<Breeds>(`https://api.thecatapi.com/v1/images/search?breed_ids=${breedId}&limit=${amount}`);
   }
 
-  getCats(): Observable<CatImages[]> {
-    return this.catsSub$
-  }
 
 }

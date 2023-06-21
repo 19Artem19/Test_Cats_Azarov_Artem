@@ -1,3 +1,3 @@
-export * from './breed.interface'
-export * from './cat-image.interface'
+export * from './breeds.interface'
 export * from './weight.interface'
+export * from './breed.interface'
