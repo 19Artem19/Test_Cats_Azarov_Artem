@@ -1,5 +1,44 @@
-.cat-image {
-    width: 200px;
-    height: auto;
-    margin: 10px;
+.wrapper {
+    display: flex;
+
+    .filter-cats {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .image-cats {
+        width: 100%;
+        align-items: center;
+        box-shadow: -8px -1px 15px -4px rgba(0, 0, 0, 0.62);
+
+        .selected-breed {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+
+            &__description {
+                font-family: 'Dancing Script', cursive;
+                font-size: 30px;
+            }
+        }
+
+        .cat-image {
+            width: 150px;
+            margin: 10px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+            &:hover {
+                transform: scale(1.6);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+                cursor: pointer;
+            }
+        }
+    }
+
 }

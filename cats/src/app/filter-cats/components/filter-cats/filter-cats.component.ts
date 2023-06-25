@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
-import { Breeds } from 'src/app/interfaces';
+import { Breed, Breeds } from 'src/app/interfaces';
 import { CatsService } from 'src/app/services/cats.service';
 
 @Component({
@@ -11,36 +13,76 @@ import { CatsService } from 'src/app/services/cats.service';
 export class FilterCatsComponent implements OnInit {
 
   subscription = new Subscription;
+  title: string = 'Breeds';
 
   breeds: Breeds[] = [];
-  selectedBreed?: string;
-  images?: any;
+  selectedBreed: string[] = [];
+  imagesBreed: Breed[] = [];
+  selectedAmount?: number;
+  defaultQuantityDisplayed: number = 10;
+  showDisplayedImages: boolean = false;
+  notDisplayedPictures: number = 0;
 
-  constructor(private catService: CatsService) { }
+  breedsCats = new FormControl('');
 
+  amountBreeds: { key: string }[] = [
+    { key: '5' },
+    { key: '10' },
+    { key: '15' },
+    { key: '20' }
+  ];
+
+  constructor(private catService: CatsService,
+    private titleService: Title) { }
 
   ngOnInit(): void {
     this.subscription.add(this.catService.getBreeds().subscribe((breed) => {
       this.breeds = breed
-      console.log('all breeds', this.breeds);
     }))
+
+    this.subscription.add(
+      this.titleService.setTitle(this.title)
+    )
+  }
+
+  onDisplayedPicturesChange(): void {
+    if (!this.selectedBreed || this.selectedBreed.length === 0) {
+      return;
+    }
+    this.getImages()
   }
 
   onBreedSelectChange(): void {
-    if (!this.selectedBreed) {
+    if (!this.selectedBreed || this.selectedBreed.length === 0) {
+      this.imagesBreed = [];
+      this.showDisplayedImages = false;
+      this.defaultQuantityDisplayed = this.notDisplayedPictures;
       return
     }
-    this.subscription.add(this.catService.getCatsImagesByBreed(this.selectedBreed, 10).subscribe((list) => {
-      this.images = list
-      console.log('images', this.images);
-    }))
+    this.getImages()
   }
 
+  getImages() {
+    const selectedBreedIds = this.selectedBreed as string[];
+    if (selectedBreedIds.length === 0) {
+      this.defaultQuantityDisplayed = this.notDisplayedPictures;
+      return;
+    }
+
+    let limit: number;
+    if (this.defaultQuantityDisplayed === 0) {
+      limit = 10;
+    } else {
+      limit = this.defaultQuantityDisplayed;
+    }
+    this.subscription.add(this.catService.getCatsImagesByBreed(selectedBreedIds, limit).subscribe((list) => {
+      this.imagesBreed = list;
+    }));
+  }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
-
 }
 
 

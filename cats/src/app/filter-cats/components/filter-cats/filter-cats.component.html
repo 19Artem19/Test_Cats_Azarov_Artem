@@ -1,12 +1,36 @@
-<p>filter-cats works!</p>
-<div>
-    <select [(ngModel)]="selectedBreed" (ngModelChange)="onBreedSelectChange()">
-      <option *ngFor="let breed of breeds" [value]="breed.id">{{ breed.name }}</option>
-    </select>
+<div class="wrapper">
+  <div class="filter-cats">
 
-    <!-- {{images.}} -->
+    <mat-form-field>
+      <mat-label>Breeds</mat-label>
+      <mat-select placeholder="Choose your breed" [formControl]="breedsCats" multiple 
+       [(value)]="selectedBreed"
+        (selectionChange)="onBreedSelectChange()">
+        <mat-option *ngFor="let breed of breeds" [value]="breed.id">
+          {{ breed.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
-    <div>
-      <img *ngFor="let image of images" class="cat-image" [src]="image.url" alt="">
-    </div>
+
+    <mat-form-field>
+      <mat-label>Amount</mat-label>
+      <mat-select placeholder="Amount of breed" [formControl]="breedsCats" 
+       [(value)]="defaultQuantityDisplayed"
+        (selectionChange)="onDisplayedPicturesChange()">
+        <mat-option *ngFor=" let amount of amountBreeds" [value]="amount.key">
+          {{amount.key}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
   </div>
+
+  <div class="image-cats">
+    <div class="selected-breed" *ngIf="selectedBreed.length === 0">
+      <p class="selected-breed__description">Your choosen cats.</p>
+    </div>
+    <img *ngFor="let image of imagesBreed" class="cat-image" [src]="image.url" alt="">
+  </div>
+
+</div>
